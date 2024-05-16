@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./index.css";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Suspense, useEffect } from "react";
+import Layout from "./components/Layout/Layout";
+import Home from "./components/Home/Home";
+import Register from "./components/Register/Register";
+import Loader from "./components/Loader/Loader";
+import axios from "axios";
+import View from "./components/View/View";
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    const wakeUp = async () => {
+      try {
+        console.log("The server was nudged, and it's stirring awake🥱");
+        await axios.get(
+          "https://api.render.com/deploy/srv-cp2bvlen7f5s73fevqkg?key=m5V2kQTHKZA"
+        );
+      } catch (error) {
+        console.log("The server just woke up✅");
+      }
+    };
+
+    wakeUp();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/events/:eventId" element={<View />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
