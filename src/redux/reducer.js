@@ -3,7 +3,7 @@ import { getAllEvents, getParticipantsThunk, registerThunk } from "./thunks";
 
 const initialState = {
   events: null,
-  eventId: null,
+  totalPages: 2,
   page: 1,
   partisipants: null,
   isLoading: false,
@@ -21,7 +21,13 @@ const eventSlice = createSlice({
     builder
       .addCase(getAllEvents.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.events = payload;
+        state.page = payload.currentPage;
+        state.totalPages = payload.totalPages;
+        if (state.page === 1) {
+          state.events = payload.events;
+        } else {
+          state.events = [...state.events, ...payload];
+        }
       })
       .addCase(registerThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;

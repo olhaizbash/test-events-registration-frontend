@@ -1,7 +1,12 @@
 import { Container } from "../Container";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllEvents, selectIsLoading } from "../../redux/selectors";
+import {
+  selectAllEvents,
+  selectIsLoading,
+  selectPage,
+  selectTotalPages,
+} from "../../redux/selectors";
 import { getAllEvents } from "../../redux/thunks";
 import Loader from "../Loader/Loader";
 import { TitleHome, FilterWrapper } from "./Home.styled";
@@ -33,9 +38,12 @@ const inputDesc = [
 const Home = () => {
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
+  const page = useSelector(selectPage);
+  const totalPages = useSelector(selectTotalPages);
   const isLoading = useSelector(selectIsLoading);
 
   const [filteredEvents, setFilteredEvents] = useState(events);
+  const [padeNew, setPageNew] = useState(page);
 
   const [values, setValues] = useState({
     title: "",
@@ -47,8 +55,23 @@ const Home = () => {
   let value = "";
 
   useEffect(() => {
-    dispatch(getAllEvents());
-  }, [dispatch]);
+    dispatch(getAllEvents(padeNew));
+  }, [dispatch, padeNew]);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 1 >=
+        document.documentElement.scrollHeight &&
+      page < totalPages
+    ) {
+      setPageNew((prev) => prev + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     setFilteredEvents(events);

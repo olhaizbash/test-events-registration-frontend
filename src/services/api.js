@@ -4,8 +4,8 @@ const instance = axios.create({
   baseURL: "https://test-events-registration.onrender.com",
 });
 
-export const getEvents = async () => {
-  const { data } = await instance.get(`/api/events`);
+export const getEvents = async (page) => {
+  const { data } = await instance.get(`/api/events/?page=${page}`);
   return data;
 };
 

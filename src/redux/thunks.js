@@ -3,9 +3,9 @@ import { getEvents, getParticipants, register } from "../services/api";
 
 export const getAllEvents = createAsyncThunk(
   "event/getAllEvents",
-  async (_, thunkAPI) => {
+  async (page, thunkAPI) => {
     try {
-      const events = await getEvents();
+      const events = await getEvents(page);
       return events;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
