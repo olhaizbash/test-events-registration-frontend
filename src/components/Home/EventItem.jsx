@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { Event, TextWrapper, ButtonWrapper, Button } from "./EventItem.styled";
+import { useDispatch } from "react-redux";
+import { setPage } from "../../redux/reducer";
 
-const EventItem = ({ _id, title, description, date, organizer, onClick }) => {
+const EventItem = ({ _id, title, description, date, organizer }) => {
+  const dispatch = useDispatch();
+
   const dateNew = new Date(date).toDateString();
   return (
     <>
@@ -13,16 +17,13 @@ const EventItem = ({ _id, title, description, date, organizer, onClick }) => {
           <p>Date: {dateNew}</p>
         </TextWrapper>
         <ButtonWrapper>
-          <Button type="button">
-            <Link to="/register" state={{ id: _id }} onClick={onClick}>
+          <Button type="button" onClick={() => dispatch(setPage())}>
+            <Link to="/register" state={{ id: _id }}>
               Register
             </Link>
           </Button>
-          <Button type="button">
-            <Link
-              to={`/events/${_id}`}
-              state={{ id: _id, title: title }}
-              onClick={onClick}>
+          <Button type="button" onClick={() => dispatch(setPage())}>
+            <Link to={`/events/${_id}`} state={{ id: _id, title: title }}>
               View
             </Link>
           </Button>

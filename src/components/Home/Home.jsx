@@ -13,7 +13,6 @@ import { TitleHome, FilterWrapper } from "./Home.styled";
 import { Wrapper } from "../Register/Register.styled";
 import EventList from "./EventList";
 import FilterInput from "./FilterInput";
-import { setPage } from "../../redux/reducer";
 
 const inputDesc = [
   {
@@ -104,10 +103,6 @@ const Home = () => {
     setFilteredEvents(elem);
   };
 
-  const handleSetPage = () => {
-    setCurrentPage(1);
-  };
-
   function formatDate(date) {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -139,7 +134,7 @@ const Home = () => {
                 })}
               </FilterWrapper>
             </Wrapper>
-            <EventList elem={filteredEvents} onClick={handleSetPage} />
+            <EventList elem={filteredEvents} />
           </>
         )}
       </Container>
