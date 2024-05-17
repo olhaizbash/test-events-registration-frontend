@@ -1,7 +1,7 @@
 import { EventListCSS } from "./Home.styled";
 import EventItem from "./EventItem";
 
-const EventList = ({ elem }) => {
+const EventList = ({ elem, onClick }) => {
   return (
     <EventListCSS>
       {elem?.map(({ _id, title, description, date, organizer }) => {
@@ -13,6 +13,7 @@ const EventList = ({ elem }) => {
             date={date}
             organizer={organizer}
             _id={_id}
+            onClick={onClick}
           />
         );
       })}

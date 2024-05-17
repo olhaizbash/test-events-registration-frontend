@@ -19,7 +19,7 @@ const inputDesc = [
     placeholder: "Type your name",
     required: true,
     minLength: "3",
-    maxLength: "10",
+    maxLength: "20",
     error: "The name slould contain only letters, min 3 max 10 characers",
   },
   {
@@ -61,9 +61,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(id);
     setValues({ ...values, participate: id });
-    console.log(values);
     dispatch(registerThunk(values));
     setIsRegistered(true);
   };

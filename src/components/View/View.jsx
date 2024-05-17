@@ -66,7 +66,6 @@ const View = () => {
     });
 
     setFilteredEvents(elem);
-    console.log(elem);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Event, TextWrapper, ButtonWrapper, Button } from "./EventItem.styled";
 
-const EventItem = ({ _id, title, description, date, organizer }) => {
+const EventItem = ({ _id, title, description, date, organizer, onClick }) => {
   const dateNew = new Date(date).toDateString();
   return (
     <>
@@ -14,12 +14,15 @@ const EventItem = ({ _id, title, description, date, organizer }) => {
         </TextWrapper>
         <ButtonWrapper>
           <Button type="button">
-            <Link to="/register" state={{ id: _id }}>
+            <Link to="/register" state={{ id: _id }} onClick={onClick}>
               Register
             </Link>
           </Button>
           <Button type="button">
-            <Link to={`/events/${_id}`} state={{ id: _id, title: title }}>
+            <Link
+              to={`/events/${_id}`}
+              state={{ id: _id, title: title }}
+              onClick={onClick}>
               View
             </Link>
           </Button>

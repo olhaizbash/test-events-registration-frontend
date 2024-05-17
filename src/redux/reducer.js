@@ -2,7 +2,7 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { getAllEvents, getParticipantsThunk, registerThunk } from "./thunks";
 
 const initialState = {
-  events: null,
+  events: [],
   totalPages: 2,
   page: 1,
   partisipants: null,
@@ -13,8 +13,8 @@ const eventSlice = createSlice({
   name: "event",
   initialState,
   reducers: {
-    setPage: (state, { payload }) => {
-      state.page = payload;
+    setPage: (state) => {
+      state.page = 1;
     },
   },
   extraReducers: (builder) => {
@@ -23,20 +23,20 @@ const eventSlice = createSlice({
         state.isLoading = false;
         state.page = payload.currentPage;
         state.totalPages = payload.totalPages;
-        if (state.page === 1) {
+
+        if (payload.currentPage === 1) {
+          state.events = [];
           state.events = payload.events;
         } else {
-          state.events = [...state.events, ...payload];
+          state.events = [...state.events, ...payload.events];
         }
       })
       .addCase(registerThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        console.log(payload);
       })
       .addCase(getParticipantsThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.partisipants = payload;
-        console.log(payload);
       })
       .addMatcher(
         isAnyOf(

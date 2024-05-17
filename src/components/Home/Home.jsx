@@ -13,6 +13,7 @@ import { TitleHome, FilterWrapper } from "./Home.styled";
 import { Wrapper } from "../Register/Register.styled";
 import EventList from "./EventList";
 import FilterInput from "./FilterInput";
+import { setPage } from "../../redux/reducer";
 
 const inputDesc = [
   {
@@ -38,12 +39,12 @@ const inputDesc = [
 const Home = () => {
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
-  const page = useSelector(selectPage);
+  const initialPage = useSelector(selectPage);
   const totalPages = useSelector(selectTotalPages);
   const isLoading = useSelector(selectIsLoading);
 
   const [filteredEvents, setFilteredEvents] = useState(events);
-  const [padeNew, setPageNew] = useState(page);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const [values, setValues] = useState({
     title: "",
@@ -51,27 +52,25 @@ const Home = () => {
     organizer: "",
   });
 
-  let key = "";
-  let value = "";
-
   useEffect(() => {
-    dispatch(getAllEvents(padeNew));
-  }, [dispatch, padeNew]);
+    dispatch(getAllEvents(currentPage));
+  }, [dispatch, currentPage]);
 
-  const handleScroll = () => {
+  const handleScroll = (e) => {
     if (
-      window.innerHeight + document.documentElement.scrollTop + 1 >=
-        document.documentElement.scrollHeight &&
-      page < totalPages
+      e.target.documentElement.scrollHeight -
+        (e.target.documentElement.scrollTop + window.innerHeight) <
+        100 &&
+      currentPage < totalPages
     ) {
-      setPageNew((prev) => prev + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [currentPage, totalPages]);
 
   useEffect(() => {
     setFilteredEvents(events);
@@ -80,8 +79,8 @@ const Home = () => {
   let elem = [];
 
   const handleChange = (e) => {
-    key = e.target.name;
-    value = e.target.value;
+    let key = e.target.name;
+    let value = e.target.value;
     setValues({ ...values, [e.target.name]: e.target.value });
 
     if (key === "date") {
@@ -94,7 +93,6 @@ const Home = () => {
           elem.push(el);
         }
       });
-      console.log(elem);
     }
 
     events.forEach((el) => {
@@ -104,7 +102,10 @@ const Home = () => {
     });
 
     setFilteredEvents(elem);
-    console.log(elem);
+  };
+
+  const handleSetPage = () => {
+    setCurrentPage(1);
   };
 
   function formatDate(date) {
@@ -138,7 +139,7 @@ const Home = () => {
                 })}
               </FilterWrapper>
             </Wrapper>
-            <EventList elem={filteredEvents} />
+            <EventList elem={filteredEvents} onClick={handleSetPage} />
           </>
         )}
       </Container>
